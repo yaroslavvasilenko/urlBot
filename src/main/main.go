@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/yaroslavvasilenko/golang-telegram-bot/src/handlers"
 	tele "gopkg.in/telebot.v3"
+	"io/ioutil"
 	"log"
+	"strings"
 	"time"
+	"wow/src/handlers"
 )
 
-const myToken = "5027633442:AAH3phWo2Bc4fwE58aZDb0QlxEOnBYtt7E0"
-
 func main() {
+	myToken := getToken()
 	pref := tele.Settings{
 		Token:  myToken,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
@@ -23,4 +24,13 @@ func main() {
 		handlers.OnUserMessage,
 	)
 	b.Start()
+
+}
+
+func getToken() string {
+	f, e := ioutil.ReadFile("config.txt")
+	if e != nil {
+		panic(e)
+	}
+	return strings.Split(string(f), " ")[2]
 }
